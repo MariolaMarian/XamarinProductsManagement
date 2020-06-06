@@ -8,7 +8,7 @@ PDF: https://drive.google.com/file/d/1Q6VeHwJZ9bzspqcRh4qkrfUT0t3n8gp-/view?usp=
 
 Engineering thesis: https://drive.google.com/file/d/1dHZ74tSS3ZKSA4vMmsPzu5IAyg9jrIhj/view?usp=sharing
 
-Data operations connected with API:
+Data operations connected with simple API: https://github.com/MariolaMarian/SimpleAPIForXamarin
 
 TO DO:
 
