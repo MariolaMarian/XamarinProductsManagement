@@ -12,8 +12,9 @@ Data operations connected with simple API: https://github.com/MariolaMarian/Simp
 
 TO DO:
 
-Now list of employee is "fake", add methods in userService
-Filtering report
-Better page navigation
-Improve http requests
-Classes are to fat, code refactor
+1) Now list of employee is "fake", add methods in userService
+2) Filtering report
+3) Better page navigation
+4) Improve http requests
+5) Classes are to fat, code refactor
+6) Exporting data
