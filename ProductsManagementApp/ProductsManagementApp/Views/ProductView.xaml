@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:ProductsManagementApp.Converters"
+             xmlns:behaviors="clr-namespace:ProductsManagementApp.Behaviors;assembly=ProductsManagementApp" 
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             xmlns:zxcm="clr-namespace:ZXing.Common;assembly=zxing.portable"
+             xmlns:viewModelBase="clr-namespace:ProductsManagementApp.ViewModels.Base;assembly=ProductsManagementApp"
+			 viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             x:Class="ProductsManagementApp.Views.ProductView"
+             x:Name="ProductDetails"
+             BackgroundImage="background.png">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:StringToIntConverter x:Key="stringToInt"/>
+            <converters:ByteToImageConverter x:Key="byteToImage"/>
+            <converters:InverseBoolConverter x:Key="inverseBool"/>
+            <converters:EmptyToBoolConverter x:Key="emptyToBool"/>
+            <converters:CountToHeightConverter x:Key="countToHeight"/>
+            <converters:ExpirationDateToColorConverter x:Key="edToColor"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+
+        <ScrollView>
+            <Frame Margin="5" BackgroundColor="#cc555555" Padding="2" CornerRadius="20">
+            <StackLayout>
+
+                <ActivityIndicator
+                    Color="{StaticResource BlueSmallOpacity}"
+                    IsRunning="{Binding IsBusy}"  
+                    IsVisible="{Binding IsBusy}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center">
+                    <ActivityIndicator.WidthRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="iOS, Android" Value="100" />
+                        </OnPlatform>
+                    </ActivityIndicator.WidthRequest>
+                </ActivityIndicator>
+
+                    <StackLayout IsVisible="{Binding IsBusy,Converter={StaticResource inverseBool}}">
+                        <Entry Text="{Binding Name}" Placeholder="Nazwa produktu"></Entry>
+                        <Image IsVisible="{Binding Image, Converter={StaticResource emptyToBool}}" Source="{Binding Image,Converter={StaticResource byteToImage}}"></Image>
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                            <ImageButton Source="cameraIcon.png"  Command="{Binding Source={x:Reference ProductDetails}, Path=BindingContext.CameraCommand}"></ImageButton>
+                            <ImageButton Source="galleryIcon.png" Command="{Binding Source={x:Reference ProductDetails}, Path=BindingContext.GalleryCommand}"></ImageButton>
+                        </StackLayout>
+
+                        <Frame Padding="0,10,0,10" Margin="20,0,20,0" HorizontalOptions="Center" BackgroundColor="White" CornerRadius="20" >
+                            <StackLayout BackgroundColor="White">
+                                <zxing:ZXingBarcodeImageView WidthRequest="250" HeightRequest="100" BarcodeValue="{Binding BareCode}" BarcodeFormat="EAN_13" IsVisible="{Binding BareCode, Converter={StaticResource emptyToBool}}">
+                                    <zxing:ZXingBarcodeImageView.BarcodeOptions>
+                                        <zxcm:EncodingOptions Width="250" Height="100" />
+                                    </zxing:ZXingBarcodeImageView.BarcodeOptions>
+                                </zxing:ZXingBarcodeImageView>
+                                <Label IsVisible="{Binding BareCode, Converter={StaticResource emptyToBool}}" Text="{Binding BareCode}" HorizontalTextAlignment="Center" Margin="0" TextColor="Black"></Label>
+                            </StackLayout>
+                        </Frame>
+
+                        <Button Text="Skanuj kod" Command="{Binding Source={x:Reference ProductDetails}, Path=BindingContext.ScanCodeCommand}"></Button>
+                        <Picker x:Name="CategoryPicker"
+                                ItemsSource="{Binding Categories}"
+                                ItemDisplayBinding="{Binding Name}"
+                                SelectedItem="{Binding Category}"
+                                Title="Wybierz kategorię"
+                                Grid.Column="1"
+                                TextColor="WhiteSmoke">
+                        </Picker>
+
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Maksymalna ilość dni do powiadomienia" HorizontalOptions="Fill" VerticalOptions="Center" Margin="10,0,0,0" TextColor="WhiteSmoke"></Label>
+                            <Entry WidthRequest="40" Margin="0,0,10,0" TextColor="WhiteSmoke" VerticalOptions="Center" Text="{Binding MaxDays}"></Entry>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Daty przydatności" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Margin="10,0,0,0" TextColor="WhiteSmoke"></Label>
+                            <Button Text="+" HeightRequest="30" WidthRequest="30" CornerRadius="20" Margin="0,0,10,0" Padding="0"  Command="{Binding ShowExpDateCommand}" CommandParameter="0"></Button>
+                        </StackLayout>
+
+                        <ListView ItemsSource="{Binding ExpirationDates}" HasUnevenRows="True" HeightRequest="{Binding ExpirationDates.Count, Converter={StaticResource countToHeight}}">
+
+                            <ListView.Behaviors>
+                                <behaviors:EventToCommandBehavior
+                                EventName="ItemTapped"
+                                EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}"
+                                Command="{Binding Source={x:Reference ProductDetails}, Path=BindingContext.ShowExpDateCommand}"
+                                CommandParameter="{Binding Id}"/>
+                            </ListView.Behaviors>
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+
+                                        <Frame BackgroundColor="{Binding Converter={StaticResource edToColor}}" CornerRadius="20" Padding="0" Margin="0,2,0,2">
+                                            <StackLayout Orientation="Vertical" VerticalOptions="Fill" Padding="0,0,0,4">
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Label Text="{Binding EndDate, StringFormat='{}{0:dd MMMM yyyy}'}" HorizontalOptions="CenterAndExpand" VerticalTextAlignment="Center"></Label>
+                                                </StackLayout>
+
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="2*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Label Text="{Binding Count}" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"></Label>
+                                                    <Button Grid.Column="1" Text="-" IsEnabled="{Binding Collected, Converter={StaticResource inverseBool}}" Command="{Binding Source={x:Reference ProductDetails}, Path=BindingContext.MinusCommand}" CommandParameter="{Binding }" Padding="0"></Button>
+                                                    <Button Grid.Column="2" Text="+" IsEnabled="{Binding Collected, Converter={StaticResource inverseBool}}" Command="{Binding Source={x:Reference ProductDetails}, Path=BindingContext.PlusCommand}" CommandParameter="{Binding }" Padding="0"></Button>
+                                                    <Button Text="Zbierz" Grid.Column="3" IsEnabled="{Binding Collected, Converter={StaticResource inverseBool}}" Command="{Binding Source={x:Reference ProductDetails}, Path=BindingContext.CollectCommand}" CommandParameter="{Binding }" Padding="0"></Button>
+                                                </Grid>
+
+                                            </StackLayout>
+                                        </Frame>
+
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <Button Text="Zapisz" Command="{Binding Source={x:Reference ProductDetails}, Path=BindingContext.SaveCommand}" CommandParameter="{Binding .}" Margin="0,0,0,10"/>
+                    </StackLayout>
+
+            </StackLayout>
+            </Frame>
+        </ScrollView>
+
+    </ContentPage.Content>
+
+</ContentPage>

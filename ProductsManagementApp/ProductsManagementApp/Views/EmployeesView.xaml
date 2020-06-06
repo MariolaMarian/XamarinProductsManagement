@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModelCore="clr-namespace:ProductsManagementApp.ViewModels.Base;assembly=ProductsManagementApp"
+             viewModelCore:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:converters="clr-namespace:ProductsManagementApp.Converters"
+             xmlns:behaviors="clr-namespace:ProductsManagementApp.Behaviors;assembly=ProductsManagementApp" 
+             x:Class="ProductsManagementApp.Views.EmployeesView"
+             x:Name="EmployeesList"
+             BackgroundImage="background.png">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:CountToHeightConverter x:Key="countToHeight"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <Frame Margin="5" BackgroundColor="#cc555555" Padding="2" CornerRadius="20">
+            <StackLayout Margin="0,10,0,0">
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Pracownicy" HorizontalOptions="CenterAndExpand" FontSize="Large" VerticalOptions="Center" Margin="10,0,0,0" TextColor="Black"></Label>
+                    <Button Text="+" HeightRequest="30" WidthRequest="30" CornerRadius="20" Margin="0,0,10,0" Padding="0" Command="{Binding ShowEmployeeCommand}"></Button>
+                </StackLayout>
+                <ListView ItemsSource="{Binding Employees}" HasUnevenRows="True" HeightRequest="{Binding Employees.Count, Converter={StaticResource countToHeight}}">
+
+                    <ListView.Behaviors>
+                        <behaviors:EventToCommandBehavior
+                        EventName="ItemTapped"
+                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}"
+                        Command="{Binding ShowEmployeeCommand}"
+                        CommandParameter="{Binding }"/>
+                    </ListView.Behaviors>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Frame Margin="1" BackgroundColor="#aa333333" Padding="2" CornerRadius="20">
+                                    <StackLayout Margin="10,5,5,5">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="{Binding FirstName}"></Label>
+                                            <Label Text="{Binding LastName}"></Label>
+                                        </StackLayout>
+                                        <StackLayout>
+                                            <Label Text="{Binding Email}"/>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+        </Frame>
+    </ContentPage.Content>
+</ContentPage>

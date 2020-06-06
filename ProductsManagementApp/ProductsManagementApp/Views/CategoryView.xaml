@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModelCore="clr-namespace:ProductsManagementApp.ViewModels.Base;assembly=ProductsManagementApp"
+             viewModelCore:ViewModelLocator.AutoWireViewModel="true"
+             x:Class="ProductsManagementApp.Views.CategoryView"
+             Title="Kategoria"
+             x:Name="CategoryDetail"
+             BackgroundImage="background.png">
+
+    <ContentPage.Content>
+        <Frame BackgroundColor="#ee555555" Padding="0" CornerRadius="20" VerticalOptions="Start" Margin="10">
+            <StackLayout Margin="10,10,10,10">
+                <Entry Text="{Binding Name}"></Entry>
+                <Button Text="Zapisz" Command="{Binding Source={x:Reference CategoryDetail}, Path=BindingContext.SaveCommand}" CommandParameter="{Binding .}"></Button>
+            </StackLayout>
+        </Frame>
+    </ContentPage.Content>
+</ContentPage>

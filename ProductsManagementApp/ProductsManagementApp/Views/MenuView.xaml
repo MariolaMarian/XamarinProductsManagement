@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views ="clr-namespace:ProductsManagementApp.Views;assembly=ProductsManagementApp"
+             xmlns:behaviors="clr-namespace:ProductsManagementApp.Behaviors;assembly=ProductsManagementApp" 
+             xmlns:viewModelBase="clr-namespace:ProductsManagementApp.ViewModels.Base;assembly=ProductsManagementApp"
+			 viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             x:Class="ProductsManagementApp.Views.MenuView"
+             x:Name="MenuPage" 
+             NavigationPage.HasNavigationBar="False">
+    
+    <MasterDetailPage.Master>
+        <views:CustomNavigationView Title="Menu">
+            <x:Arguments>
+                <ContentPage BackgroundImage="background.png">
+                    <StackLayout>
+                        <ListView ItemsSource="{Binding MenuItems}">
+                            <ListView.Behaviors>
+                                <behaviors:EventToCommandBehavior
+                                    EventName="ItemTapped"
+                                    EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}"
+                                    Command="{Binding NavigateDetailCommand}"/>
+                            </ListView.Behaviors>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal" Padding="5,5,0,5" BackgroundColor="#ee666666">
+                                            <Image Source="{Binding Icon}"></Image>
+                                            <Label Text="{Binding Name}" VerticalTextAlignment="Center" TextColor="Black"></Label>
+                                        </StackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackLayout>
+                </ContentPage>
+            </x:Arguments>
+        </views:CustomNavigationView>
+    </MasterDetailPage.Master>
+
+    <MasterDetailPage.Detail>
+        <views:CustomNavigationView>
+            <x:Arguments>
+                <views:GreetingView></views:GreetingView>
+            </x:Arguments>
+        </views:CustomNavigationView>
+    </MasterDetailPage.Detail>
+</MasterDetailPage>

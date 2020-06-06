@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModelCore="clr-namespace:ProductsManagementApp.ViewModels.Base;assembly=ProductsManagementApp"
+             viewModelCore:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:converters="clr-namespace:ProductsManagementApp.Converters"
+             BackgroundImage="background.png"
+             x:Class="ProductsManagementApp.Views.EmployeeView">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:SmallCountToHeightConverter x:Key="countToHeight"/>
+            <converters:StringToBoolConverter x:Key="stringToBool"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <Frame Margin="5" BackgroundColor="#cc555555" Padding="2" CornerRadius="20">
+                <StackLayout Padding="10">
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Imię:" WidthRequest="65" VerticalOptions="Center"></Label>
+                        <Entry Text="{Binding Employee.FirstName}" HorizontalOptions="FillAndExpand" FontSize="Small"/>
+                    </StackLayout>
+                
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Nazwisko:" WidthRequest="65" VerticalOptions="Center"></Label>
+                        <Entry Text="{Binding Employee.LastName}" HorizontalOptions="FillAndExpand" FontSize="Small"/>
+                    </StackLayout>
+                
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Email:" WidthRequest="65" VerticalOptions="Center"></Label>
+                        <Entry Text="{Binding Employee.Email}" HorizontalOptions="FillAndExpand" FontSize="Small"/>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal" IsVisible="{Binding Employee.Id, Converter={StaticResource stringToBool}}">
+                        <Label Text="Hasło:" WidthRequest="65" VerticalOptions="Center"></Label>
+                        <Entry Text="{Binding Employee.Password}" IsPassword="True" HorizontalOptions="FillAndExpand" FontSize="Small"/>
+                    </StackLayout>
+
+                    <Label Text="Działy" TextColor="Black" FontSize="Large" HorizontalOptions="Center"></Label>
+
+                    <ListView ItemsSource="{Binding Employee.Categories}" HasUnevenRows="True" HeightRequest="{Binding Employee.Categories.Count, Converter={StaticResource countToHeight}}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame Margin="1" BackgroundColor="#aa333333" Padding="2" CornerRadius="20">
+                                        <StackLayout Orientation="Horizontal" Margin="10,1,10,1" Padding="5">
+                                            <Label Text="{Binding Name}" VerticalOptions="Center"></Label>
+                                            <Switch HorizontalOptions="End" IsToggled="True"></Switch>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <Button Text="Zapisz"></Button>
+                
+                </StackLayout>
+            </Frame>
+        </ScrollView>
+    </ContentPage.Content>
+    
+</ContentPage>

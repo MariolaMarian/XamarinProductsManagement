@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModelCore="clr-namespace:ProductsManagementApp.ViewModels.Base;assembly=ProductsManagementApp"       
+             viewModelCore:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:behaviors="clr-namespace:ProductsManagementApp.Behaviors;assembly=ProductsManagementApp" 
+             xmlns:converters="clr-namespace:ProductsManagementApp.Converters"
+             x:Class="ProductsManagementApp.Views.ExpirationDatesView"
+             BackgroundImage="background.png">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ByteToImageConverter x:Key="byteToImage"/>
+            <converters:ExpirationDateToColorConverter x:Key="edToColor"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <ContentPage.Content>
+        <StackLayout>
+
+            <ActivityIndicator
+            Color="{StaticResource LightGreenColor}"
+            IsRunning="{Binding IsBusy}"  
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Center"
+            HorizontalOptions="Center">
+                <ActivityIndicator.WidthRequest>
+                    <OnPlatform x:TypeArguments="x:Double">
+                        <On Platform="iOS, Android" Value="100" />
+                    </OnPlatform>
+                </ActivityIndicator.WidthRequest>
+            </ActivityIndicator>
+
+            <ListView ItemsSource="{Binding ExpirationDates}" Margin="10,10,10,0">
+                    <ListView.Behaviors>
+                        <behaviors:EventToCommandBehavior
+                        EventName="ItemTapped"
+                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}"
+                        Command="{Binding ProductDetailsCommand}"/>
+                    </ListView.Behaviors>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                            <Frame Padding="0" BackgroundColor="{Binding Converter={StaticResource edToColor}}" CornerRadius="20">
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Fill" Margin="0,2,0,2">
+                                    <Image Source="{Binding Product.Image,Converter={StaticResource byteToImage}}" HeightRequest="49" Margin="10,5,0,5"></Image>
+                                    <Label Text="{Binding EndDate, StringFormat='{}{0:dd MMMM yyyy}'}" HorizontalOptions="CenterAndExpand" VerticalTextAlignment="Center"></Label>
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

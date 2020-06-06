@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:viewModelCore="clr-namespace:ProductsManagementApp.ViewModels.Base;assembly=ProductsManagementApp"
+             viewModelCore:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:behaviors="clr-namespace:ProductsManagementApp.Behaviors;assembly=ProductsManagementApp" 
+             xmlns:converters="clr-namespace:ProductsManagementApp.Converters"
+             x:Class="ProductsManagementApp.Views.CategoriesView"
+             x:Name="CategoriesList"
+             Title="Lista" 
+             BackgroundImage="background.png">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ByteToImageConverter x:Key="byteToImage"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout Margin="5,5,5,5">
+
+            <ActivityIndicator
+            Color="{StaticResource BlueSmallOpacity}"
+            IsRunning="{Binding IsBusy}"  
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Center"
+            HorizontalOptions="Center">
+                <ActivityIndicator.WidthRequest>
+                    <OnPlatform x:TypeArguments="x:Double">
+                        <On Platform="iOS, Android" Value="100" />
+                    </OnPlatform>
+                </ActivityIndicator.WidthRequest>
+            </ActivityIndicator>
+
+            <ListView ItemsSource="{Binding ExpandedGroups}"
+              IsGroupingEnabled="True">
+                <ListView.Behaviors>
+                    <behaviors:EventToCommandBehavior
+                        EventName="ItemTapped"
+                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}"
+                        Command="{Binding ProductDetailsCommand}"/>
+                </ListView.Behaviors>
+                <ListView.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout>
+                                <Label Text="{Binding Name}" 
+                                       BackgroundColor="#ee555555"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"
+                                       VerticalOptions="FillAndExpand" 
+                                       TextColor="WhiteSmoke"/>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={x:Reference CategoriesList}, Path=BindingContext.ShowCategoryItemsCommand}"
+                                        CommandParameter="{Binding Name}"/>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.GroupHeaderTemplate>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Frame Padding="0" BackgroundColor="#bb333333" CornerRadius="10" HorizontalOptions="FillAndExpand">
+                                    <StackLayout BackgroundColor="#bb333333" Orientation="Horizontal">
+                                        <Image Source="{Binding Image,Converter={StaticResource byteToImage}}" HeightRequest="40" WidthRequest="40" Margin="0,5,5,5"></Image>
+                                        <StackLayout>
+                                            <Label Text="{Binding Name}"  VerticalTextAlignment="Center" TextColor="WhiteSmoke"></Label>
+                                            <Label Text="{Binding BareCode}"  VerticalTextAlignment="Center" FontSize="Micro" TextColor="WhiteSmoke"></Label>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModelCore="clr-namespace:ProductsManagementApp.ViewModels.Base;assembly=ProductsManagementApp"
+             viewModelCore:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:converters="clr-namespace:ProductsManagementApp.Converters"
+             BackgroundImage="background.png"
+             x:Class="ProductsManagementApp.Views.ExpirationDateView"
+             x:Name="ExpirationDateDetails">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:InverseBoolConverter x:Key="inverseBool"/>
+            <converters:IntToBoolConverter x:Key="intBool"/>
+            <converters:IdToBoolConverter x:Key="idBool"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+     
+
+    <ContentPage.Content>
+
+        <Frame BackgroundColor="#cc555555" CornerRadius="20" Margin="10,10,10,10" Padding="0" VerticalOptions="Start">
+            <StackLayout BackgroundColor="#cc555555" Padding="10">
+                <DatePicker Date="{Binding ExpirationDate.EndDate}" IsEnabled="{Binding ExpirationDate.Id, Converter={StaticResource intBool}}" HorizontalOptions="FillAndExpand" TextColor="White" VerticalOptions="Center"/>
+                <StackLayout Orientation="Horizontal" IsVisible="{Binding ExpirationDate.Id, Converter={StaticResource idBool}}" HorizontalOptions="Center">
+                    <Label Text="Nie zebrano" VerticalOptions="Center" IsVisible="{Binding ExpirationDate.Collected, Converter={StaticResource inverseBool}}"/>
+                    <Label Text="Zebrano" VerticalOptions="Center" IsVisible="{Binding ExpirationDate.Collected}"/>
+                </StackLayout>
+                <Label Text="przez Mariusz Kowalski" IsVisible="{Binding ExpirationDate.Collected}" HorizontalOptions="Center"/>
+                <Label Text="w dniu 15/11/2019" IsVisible="{Binding ExpirationDate.Collected}" HorizontalOptions="Center"/>
+                <Button Text="Dodaj" IsVisible="{Binding ExpirationDate.Id, Converter={StaticResource intBool}}" Command="{Binding Source={x:Reference ExpirationDateDetails}, Path=BindingContext.SaveCommand}" CommandParameter="{Binding .}"></Button>
+            </StackLayout>
+        </Frame>
+
+    </ContentPage.Content>
+</ContentPage>

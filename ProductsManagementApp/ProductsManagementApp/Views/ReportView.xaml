@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModelCore="clr-namespace:ProductsManagementApp.ViewModels.Base;assembly=ProductsManagementApp"
+             viewModelCore:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:converters="clr-namespace:ProductsManagementApp.Converters"
+             BackgroundImage="background.png"
+             x:Class="ProductsManagementApp.Views.ReportView"
+             x:Name="ReportPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:SmallCountToHeightConverter x:Key="smallCountToHeight"/>
+            <converters:CountToHeightConverter x:Key="countToHeight"/>
+            <converters:BoolToTextConverter x:Key="boolToText"/>
+            <converters:DateToStringConverter x:Key="dateToText"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+
+        <Frame Margin="3" BackgroundColor="#cc555555" CornerRadius="20" Padding="0">
+            <StackLayout Margin="5">
+
+                <ScrollView Margin="0">
+                    <Frame BackgroundColor="#cc333333" CornerRadius="20" Padding="0" >
+                        <StackLayout Padding="5">
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                <Label Text="Pokaż filtry" HorizontalOptions="Fill" VerticalOptions="Center" FontSize="Large" TextColor="Black"></Label>
+                                <Switch IsToggled="{Binding Customize}"></Switch>
+                            </StackLayout>
+
+                            <StackLayout IsVisible="{Binding Customize}">
+
+                                <StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Data początkowa" HorizontalOptions="Fill" VerticalOptions="Center"></Label>
+                                        <Switch IsToggled="{Binding IsBeggining}"></Switch>
+                                    </StackLayout>
+                                    <DatePicker IsVisible="{Binding IsBeggining}" FontSize="Small"></DatePicker>
+                                </StackLayout>
+
+                                <StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Data końcowa" HorizontalOptions="Fill" VerticalOptions="Center"></Label>
+                                        <Switch IsToggled="{Binding IsEnding}"></Switch>
+                                    </StackLayout>
+                                    <DatePicker IsVisible="{Binding IsEnding}" FontSize="Small"></DatePicker>
+                                </StackLayout>
+
+
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Tylko zebrane" HorizontalOptions="Fill" VerticalOptions="Center"></Label>
+                                    <Switch IsToggled="{Binding OnlyCollected}"></Switch>
+                                </StackLayout>
+
+                                <StackLayout>
+
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Wybrane kategorie" HorizontalOptions="Fill" VerticalOptions="Center"></Label>
+                                        <Switch IsToggled="{Binding SelectedCategories}"></Switch>
+                                    </StackLayout>
+
+                                    <StackLayout IsVisible="{Binding SelectedCategories}">
+                                        <Label Text="Działy" TextColor="White" FontSize="Large" HorizontalOptions="Center"></Label>
+
+                                        <ListView ItemsSource="{Binding AllCategories}" HasUnevenRows="True" HeightRequest="{Binding AllCategories.Count, Converter={StaticResource smallCountToHeight}}">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <ViewCell>
+                                                        <Frame Margin="1" BackgroundColor="#aa111111" Padding="2" CornerRadius="20">
+                                                            <StackLayout Orientation="Horizontal" Margin="10,1,10,1" Padding="5">
+                                                                <Label Text="{Binding Name}" VerticalOptions="Center"></Label>
+                                                                <Switch HorizontalOptions="End"></Switch>
+                                                            </StackLayout>
+                                                        </Frame>
+                                                    </ViewCell>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </StackLayout>
+
+                                </StackLayout>
+
+                                <Button Text="Zastosuj" FontSize="Small"></Button>
+
+                            </StackLayout>
+
+                        </StackLayout>
+                    </Frame>
+                </ScrollView>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <ScrollView Orientation="Both" Grid.Row="0">
+                        <StackLayout BackgroundColor="#aaeeeeee">
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                    <ColumnDefinition Width="120"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                    <ColumnDefinition Width="60"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                    <ColumnDefinition Width="60"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="43"></RowDefinition>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0" Text="Produkt" Style="{StaticResource TableHeader}"></Label>
+                                <Label Grid.Row="0" Grid.Column="1" Text="Kod kreskowy" Style="{StaticResource TableHeader}"></Label>
+                                <Label Grid.Row="0" Grid.Column="2" Text="Data przydatności" Style="{StaticResource TableHeader}"></Label>
+                                <Label Grid.Row="0" Grid.Column="3" Text="Zebrane" Style="{StaticResource TableHeader}"></Label>
+                                <Label Grid.Row="0" Grid.Column="4" Text="Data zbioru" Style="{StaticResource TableHeader}"></Label>
+                                <Label Grid.Row="0" Grid.Column="5" Text="Ilość" Style="{StaticResource TableHeader}"></Label>
+                            </Grid>
+
+                            <ListView ItemsSource="{Binding ReportData}" HeightRequest="{Binding ReportData.Count, Converter={StaticResource smallCountToHeight}}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <ViewCell>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                                    <ColumnDefinition Width="120"></ColumnDefinition>
+                                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                                    <ColumnDefinition Width="60"></ColumnDefinition>
+                                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                                    <ColumnDefinition Width="60"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="43"></RowDefinition>
+                                                </Grid.RowDefinitions>
+
+                                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding Product.Name}" Style="{StaticResource TableCell}"></Label>
+                                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Product.BareCode}" Style="{StaticResource TableCell}"></Label>
+                                                <Label Grid.Row="0" Grid.Column="2" Text="{Binding EndDate, Converter={StaticResource dateToText}}" Style="{StaticResource TableCell}"></Label>
+                                                <Label Grid.Row="0" Grid.Column="3" Text="{Binding Collected, Converter={StaticResource boolToText}}" Style="{StaticResource TableCell}"></Label>
+                                                <Label Grid.Row="0" Grid.Column="4" Text="{Binding CollectedDate, Converter={StaticResource dateToText}}" Style="{StaticResource TableCell}"></Label>
+                                                <Label Grid.Row="0" Grid.Column="5" Text="{Binding Count}" Style="{StaticResource TableCell}"></Label>
+
+                                            </Grid>
+                                        </ViewCell>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+
+                        </StackLayout>
+                    </ScrollView>
+
+                    <!--
+                    <ImageButton Source="saveIcon.png" Grid.Row="0" HorizontalOptions="End" VerticalOptions="End" Margin="0,0,10,10" Command="{Binding Source={x:Reference ReportPage}, Path=BindingContext.SaveReportCommand}"></ImageButton>
+                    -->
+
+                </Grid>
+
+
+            </StackLayout>
+        </Frame>
+
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProductsManagementApp.Views.GreetingView"
+             xmlns:viewModelBase="clr-namespace:ProductsManagementApp.ViewModels.Base;assembly=ProductsManagementApp"
+			 viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             x:Name="GreetingsView"
+             BackgroundImage="background.png">
+    <ContentPage.Content>
+        <Frame BackgroundColor="#ee555555" Padding="40" CornerRadius="20" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <StackLayout>
+                <Label Text="Witaj w pracy!" FontSize="Large"/>
+            </StackLayout>
+        </Frame>
+    </ContentPage.Content>
+</ContentPage>
